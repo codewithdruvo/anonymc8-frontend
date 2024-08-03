@@ -19,7 +19,7 @@ const ThreadForm = (_props: Props) => {
   }, [sendMessage, text]);
 
   return (
-    <div className="flex items-start px-10 gap-5 pb-10">
+    <div className="flex flex-col sm:flex-row items-start px-5 sm:px-10 gap-5 pb-10">
       <Textarea
         placeholder="Write a message"
         value={text}

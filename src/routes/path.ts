@@ -1,9 +1,6 @@
 const paths = {
   root: "/",
-  thread: {
-    root: "/thread",
-    details: (id: string) => `/thread/${id}`,
-  },
+  thread: (id: string) => `/${id}`,
 };
 
 export default paths;

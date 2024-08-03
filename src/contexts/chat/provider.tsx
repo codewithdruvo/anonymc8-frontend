@@ -1,5 +1,5 @@
 import useArrayData from "@/hooks/use-array-data";
-import { IChatContext, IMessage, IMessageAlert } from "@/types/chat";
+import { IChatContext, IMessage } from "@/types/chat";
 import {
   ReactNode,
   useCallback,
@@ -11,39 +11,35 @@ import {
 import { io, Socket } from "socket.io-client";
 import { chatContext } from "./context";
 
+const events = {
+  CREATE_MESSAGE: "create-message",
+  NEW_MESSAGE: "new-message",
+  JOIN_ROOM: "room-join",
+};
+
 type Props = { children: ReactNode };
 
 export const ChatContextProvider = (props: Props) => {
   const { children } = props;
 
   const socket = useRef<Socket | null>(null);
+  console.count("chat"); // debugging if there is multiple render
 
-  console.count("chat");
+  const [clientId, setClientId] = useState<IChatContext["clientId"]>(null);
+  const [roomId, setRoomId] = useState<IChatContext["roomId"]>(null);
 
-  const [userId, setUserId] = useState<string | null>(null);
-  const [room, setRoom] = useState<string | null>(null);
-
-  const rooms = useArrayData<string>([]);
-  const messages = useArrayData<IMessage | IMessageAlert>([]);
+  const messages = useArrayData<IMessage>([]);
 
   useEffect(() => {
     if (!socket.current) {
       socket.current = io("http://localhost:5000/socket/chat");
 
       socket.current.on("connect", () => {
-        console.log("Socket Connected: ", socket.current?.id);
-        setUserId(socket.current?.id || null);
+        console.log("Client Connected: ", socket.current?.id);
+        setClientId(socket.current?.id || null);
       });
 
-      socket.current.on("group-new", (data: string) => {
-        rooms.addData(data);
-      });
-
-      socket.current.on("new-message", (data: IMessage) => {
-        messages.addData(data);
-      });
-
-      socket.current.on("group-new-member", (data: IMessageAlert) => {
+      socket.current.on(events.NEW_MESSAGE, (data: IMessage) => {
         messages.addData(data);
       });
     }
@@ -58,90 +54,52 @@ export const ChatContextProvider = (props: Props) => {
   // handle send message
   const sendMessage: IChatContext["sendMessage"] = useCallback(
     (text) => {
-      if (!socket.current || !userId || !room) return;
+      if (!socket.current || !clientId || !roomId)
+        return { error: true, message: "Couldn't establish connection" };
 
       const newMessage: IMessage = {
         text,
-        author: userId,
+        author: clientId,
+        room: roomId,
         createdAt: new Date().getTime(),
-        room,
       };
 
-      socket.current.emit("message", newMessage);
+      socket.current.emit(events.CREATE_MESSAGE, newMessage);
       messages.addData(newMessage);
     },
-    [messages, room, userId]
+    [clientId, messages, roomId]
   );
 
-  // handle navigate room
-  const navigateRoom: IChatContext["navigateRoom"] = useCallback(
+  // update room
+  const updateRoom: IChatContext["updateRoom"] = useCallback(
     (id) => {
-      setRoom(id);
-
-      messages.clearData();
+      setRoomId((prev) => {
+        if (prev !== id) messages.clearData(); // clear on room id change
+        return id;
+      });
     },
     [messages]
   );
 
-  // get room
-  const getRoom: IChatContext["getRoom"] = useCallback(
-    (id) => {
-      if (!Array.isArray(rooms.data)) return undefined;
-
-      return rooms.data.find((r) => r === id);
-    },
-    [rooms.data]
-  );
-
-  // handle send message
-  const createGroup: IChatContext["createGroup"] = useCallback(() => {
-    if (!socket.current || !userId) return;
-
-    socket.current.emit("group-create");
-  }, [userId]);
-
-  // handle send message
-  const joinGroup: IChatContext["joinGroup"] = useCallback(
-    (id) => {
-      if (!socket.current || !userId) return;
-
-      socket.current.emit("group-join", id);
-      rooms.addData(id);
-    },
-    [rooms, userId]
-  );
-
-  // sort messages by createdAt
-  const contents = useMemo(() => {
+  // sort & parse messages
+  const parsedMessages = useMemo(() => {
     if (!Array.isArray(messages.data)) return [];
 
-    const filterdData = messages.data.filter((m) => m.room === room);
+    const filterdData = messages.data.filter((m) => m.room === roomId);
 
     return filterdData.sort((a, b) => a.createdAt - b.createdAt);
-  }, [messages.data, room]);
+  }, [messages.data, roomId]);
 
   // memorized values
   const value: IChatContext = useMemo(
     () => ({
-      userId,
-      contents,
-      navigateRoom,
-      rooms: rooms.data,
+      clientId,
+      roomId,
+      messages: parsedMessages,
       sendMessage,
-      getRoom,
-      createGroup,
-      joinGroup,
+      updateRoom,
     }),
-    [
-      contents,
-      createGroup,
-      getRoom,
-      joinGroup,
-      navigateRoom,
-      rooms.data,
-      sendMessage,
-      userId,
-    ]
+    [clientId, updateRoom, parsedMessages, roomId, sendMessage]
   );
 
   return <chatContext.Provider value={value}>{children}</chatContext.Provider>;

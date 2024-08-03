@@ -1,42 +1,48 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useChatContext } from "@/contexts/chat";
-import { getDicebearBottNeutral } from "@/lib/dicebear";
-import { LucideUser } from "lucide-react";
+import useJoinRoomAPI from "@/hooks/api/join-room-api";
+import { LucideLoader2 } from "lucide-react";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import ThreadForm from "./thread-form";
-import ThreadList from "./thread-list";
+import ThreadForm from "./sections/thread-form";
+import ThreadHeader from "./sections/thread-header";
+import ThreadList from "./sections/thread-list";
 
 type Props = {};
 
 const ThreadPage = (_props: Props) => {
   const { id } = useParams();
-  const { getRoom } = useChatContext();
+  const { error, loading, execute, data } = useJoinRoomAPI();
 
-  const room = getRoom(id || "");
+  // join thread
+  useEffect(() => {
+    if (id) {
+      execute(id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
-  if (!room) {
-    return <div>Room Not Found</div>;
+  if (!loading && error) {
+    return <>Error</>;
+  }
+
+  if (!loading && !data) {
+    return <>Not Found</>;
+  }
+
+  if (!loading && data) {
+    return (
+      <div className="flex flex-col w-full h-screen">
+        <ThreadHeader />
+
+        <ThreadList />
+
+        <ThreadForm />
+      </div>
+    );
   }
 
   return (
-    <div className="flex flex-col w-full h-screen">
-      <div className="flex items-center px-10 py-5 gap-4">
-        <Avatar className="size-14">
-          <AvatarImage src={getDicebearBottNeutral(room)} />
-          <AvatarFallback>
-            <LucideUser />
-          </AvatarFallback>
-        </Avatar>
-
-        <div className="flex flex-col">
-          <h2 className="text-2xl font-semibold">{room}</h2>
-          <p className="text-sm opacity-70">{room}</p>
-        </div>
-      </div>
-
-      <ThreadList />
-
-      <ThreadForm />
+    <div className="w-full h-screen flex items-center justify-center">
+      <LucideLoader2 className="animate-spin" size={32} />
     </div>
   );
 };

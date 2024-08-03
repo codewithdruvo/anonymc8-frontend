@@ -10,17 +10,18 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useChatContext } from "@/contexts/chat";
+import paths from "@/routes/path";
+import { LucideArrowRight } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-const JoinRoom = () => {
-  const { joinGroup } = useChatContext();
-
+const JoinButton = () => {
   const [id, setId] = useState("");
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
-  const handleSubmit = () => {
-    joinGroup(id);
+  const handleSubmit = async () => {
+    navigate(paths.thread(id));
     setId("");
     setOpen(false);
   };
@@ -28,7 +29,10 @@ const JoinRoom = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Join Room</Button>
+        <Button variant={"secondary"} size={"lg"} className="gap-2">
+          Join
+          <LucideArrowRight size={18} />
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -37,7 +41,7 @@ const JoinRoom = () => {
             Enter the room id to join the room
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
+        <div className="py-4">
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="id" className="text-right">
               ID
@@ -58,4 +62,4 @@ const JoinRoom = () => {
   );
 };
 
-export default JoinRoom;
+export default JoinButton;

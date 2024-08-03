@@ -14,21 +14,21 @@ type Props = {
 const ThreadMessage = (props: Props) => {
   const { message, showAuthor } = props;
 
-  const { userId } = useChatContext();
+  const { clientId } = useChatContext();
 
   if (message.author) {
     return (
       <div
         className={cn(
           "w-full flex flex-col gap-2",
-          userId === message.author ? "items-end text-right" : "items-start"
+          clientId === message.author ? "items-end text-right" : "items-start"
         )}
       >
         {showAuthor && (
           <div
             className={cn(
               "flex items-center text-xs text-foreground/80 gap-2 mt-10",
-              userId === message.author ? "flex-row-reverse" : ""
+              clientId === message.author ? "flex-row-reverse" : ""
             )}
           >
             <Avatar className="size-6">
@@ -43,7 +43,7 @@ const ThreadMessage = (props: Props) => {
         <Card
           className={cn(
             "max-w-[500px] min-w-[100px] mb-2",
-            userId === message.author ? "mr-7" : "ml-7"
+            clientId === message.author ? "mr-7" : "ml-7"
           )}
         >
           <CardContent className="px-4 py-3">

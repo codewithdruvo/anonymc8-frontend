@@ -1,8 +1,8 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useChatContext } from "@/contexts/chat";
-import { getDicebearBottNeutral, getDicebearDylan } from "@/lib/dicebear";
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
-import { LucideArrowLeft, LucideUser, LucideUsers } from "lucide-react";
+import { getDicebearDylan } from "@/lib/dicebear";
+import { LucideArrowLeft, LucideCopy, LucideUser } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 type Props = {};
@@ -11,32 +11,42 @@ const ThreadHeader = (_props: Props) => {
   const navigate = useNavigate();
   const { roomId, clientId } = useChatContext();
 
+  const handleCopy = (text: string | null) => {
+    if (!text) return;
+
+    navigator.clipboard.writeText(text);
+  };
+
   return (
-    <div className="flex items-center px-5 sm:px-10 py-5 gap-4">
-      <Button
-        size={"icon"}
-        variant={"ghost"}
-        className="mr-3 sm:hidden"
-        onClick={() => navigate(-1)}
-      >
+    <div className="flex items-center justify-between py-5 gap-3">
+      <Button size={"icon"} variant={"outline"} onClick={() => navigate(-1)}>
         <LucideArrowLeft />
       </Button>
 
-      <Avatar className="size-12 sm:size-14">
-        <AvatarImage src={roomId ? getDicebearBottNeutral(roomId) : ""} />
-        <AvatarFallback>
-          <LucideUsers />
-        </AvatarFallback>
-      </Avatar>
+      <div className="flex items-center gap-3">
+        {/* <Avatar className="size-12 flex-shrink-0">
+          <AvatarImage />
+          <AvatarFallback>
+            <LucideHash />
+          </AvatarFallback>
+        </Avatar> */}
 
-      <div className="flex flex-col mr-auto">
-        <h2 className="text-xl sm:text-2xl font-semibold">{roomId}</h2>
-        <p className="text-sm opacity-70">room</p>
+        <div className="flex flex-col items-center text-center">
+          <div className="flex items-center gap-2">
+            <h2 className="text-xl font-semibold">{roomId}</h2>
+            <LucideCopy
+              size={16}
+              className="cursor-pointer hover:text-primary select-none"
+              onClick={() => handleCopy(roomId)}
+            />
+          </div>
+          <p className="text-sm opacity-70">room</p>
+        </div>
       </div>
 
       <Avatar>
-        <AvatarImage src={clientId ? getDicebearDylan(clientId) : ""} />
-        <AvatarFallback>
+        <AvatarImage src={clientId ? getDicebearDylan(clientId) : undefined} />
+        <AvatarFallback className="bg-muted">
           <LucideUser />
         </AvatarFallback>
       </Avatar>

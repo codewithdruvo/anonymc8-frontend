@@ -40,7 +40,7 @@ const ThreadList = (_props: Props) => {
 
   return (
     <>
-      <div className="flex flex-1 h-full flex-col px-6 sm:px-10 overflow-y-auto pb-10">
+      <div className="flex flex-1 h-full flex-col px-1 overflow-y-auto">
         {messages.map((message, i, arr) => {
           if (message.author === "NOTICE") {
             return (
@@ -61,7 +61,7 @@ const ThreadList = (_props: Props) => {
         })}
       </div>
 
-      <div ref={lastDivRef} />
+      <div ref={lastDivRef} className="pb-10" />
     </>
   );
 };

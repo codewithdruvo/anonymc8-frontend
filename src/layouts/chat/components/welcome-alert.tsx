@@ -1,4 +1,4 @@
-import { ProfileCard } from "@/components/cards/profile";
+import { RoomCard } from "@/components/cards/room";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -8,11 +8,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useChatContext } from "@/contexts/chat";
+import { getDicebearDylan } from "@/lib/dicebear";
 import { DialogDescription } from "@radix-ui/react-dialog";
 
 type Props = {};
 
 const WelcomeAlert = (_props: Props) => {
+  const { profile } = useChatContext();
+
   return (
     <Dialog defaultOpen>
       <DialogContent>
@@ -24,7 +28,13 @@ const WelcomeAlert = (_props: Props) => {
           </DialogDescription>
         </DialogHeader>
         <div>
-          <ProfileCard title="Jhon Doe" subtitle="helloworld" avatar="" />
+          {profile && (
+            <RoomCard
+              title={profile.username}
+              subtitle={profile.id}
+              avatar={getDicebearDylan(profile.id)}
+            />
+          )}
         </div>
         <DialogFooter>
           <DialogClose asChild>

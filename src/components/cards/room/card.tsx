@@ -1,18 +1,24 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { LucideUser } from "lucide-react";
 
 type Props = {
   title: string;
   subtitle: string;
   avatar: string;
+
+  onClick?: () => void;
 };
 
-export const ProfileCard = (props: Props) => {
-  const { avatar, subtitle, title } = props;
+export const RoomCard = (props: Props) => {
+  const { avatar, subtitle, title, onClick } = props;
 
   return (
-    <Card className="hover:bg-muted/50 cursor-pointer">
+    <Card
+      className={cn(onClick ? "hover:bg-muted/50 cursor-pointer" : "")}
+      onClick={onClick}
+    >
       <CardContent className="flex flex-row items-center py-3 px-4 m-0 gap-3">
         <Avatar>
           <AvatarImage src={avatar} />

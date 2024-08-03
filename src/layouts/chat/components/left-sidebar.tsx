@@ -1,29 +1,43 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardContent } from "@/components/ui/card";
-import { LucideUser } from "lucide-react";
+import { RoomCard } from "@/components/cards/room";
+import { Button } from "@/components/ui/button";
+import { useChatContext } from "@/contexts/chat";
+import { getDicebearBottNeutral } from "@/lib/dicebear";
+import paths from "@/routes/path";
+import { useNavigate } from "react-router-dom";
+import JoinRoom from "./join-room";
 
 type Props = {};
 
 const LeftSidebar = (_props: Props) => {
+  const { rooms, navigateRoom, createGroup } = useChatContext();
+  const navigate = useNavigate();
+
+  const handleNavigate = (id: string) => {
+    navigateRoom(id);
+    if (id) navigate(paths.thread.details(id));
+  };
+
   return (
     <div className="py-5">
-      <h1 className="font-bold text-2xl mb-10">AnoNym Chats</h1>
+      <h1 className="font-bold text-2xl mb-5">AnoNymC8</h1>
 
-      <div className="flex flex-col">
-        <Card className="hover:bg-muted/50 cursor-pointer">
-          <CardContent className="flex flex-row items-center py-3 px-4 m-0 gap-3">
-            <Avatar>
-              <AvatarImage src="" />
-              <AvatarFallback>
-                <LucideUser />
-              </AvatarFallback>
-            </Avatar>
-            <div className="flex flex-col">
-              <h2 className="font-semibold">JhonDoe</h2>
-              <p className="text-sm opacity-60">dlfjlskuiaodjlksad</p>
-            </div>
-          </CardContent>
-        </Card>
+      <div className="flex items-center gap-2 mb-10">
+        <Button className="flex-1" onClick={createGroup}>
+          New Room
+        </Button>
+        <JoinRoom />
+      </div>
+
+      <div className="flex flex-col gap-2">
+        {rooms.map((p) => (
+          <RoomCard
+            key={p}
+            avatar={getDicebearBottNeutral(p)}
+            subtitle={p}
+            title={p}
+            onClick={() => handleNavigate(p)}
+          />
+        ))}
       </div>
     </div>
   );

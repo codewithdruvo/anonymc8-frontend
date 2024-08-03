@@ -10,7 +10,7 @@ const ChatLayout = (_props: Props) => {
       <div className="fixed inset-0 bg-background w-[350px] h-full border-r px-5">
         <LeftSidebar />
       </div>
-      <div className="ml-[350px]">
+      <div className="ml-[350px] min-h-screen">
         <Outlet />
       </div>
       <WelcomeAlert />

@@ -1,3 +1,4 @@
+import { ChatContextProvider } from "@/contexts/chat";
 import { RouterProvider } from "react-router-dom";
 import router from "./router";
 
@@ -5,9 +6,9 @@ type Props = {};
 
 const App = (_props: Props) => {
   return (
-    <div>
+    <ChatContextProvider>
       <RouterProvider router={router} />
-    </div>
+    </ChatContextProvider>
   );
 };
 

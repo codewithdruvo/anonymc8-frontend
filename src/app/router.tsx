@@ -1,7 +1,7 @@
 import ChatLayout from "@/layouts/chat";
-import GroupPage from "@/pages/group";
 import HomePage from "@/pages/home";
-import PersonalPage from "@/pages/personal";
+import ThreadPage from "@/pages/thread";
+import paths from "@/routes/path";
 import { createBrowserRouter } from "react-router-dom";
 
 const router = createBrowserRouter([
@@ -13,12 +13,8 @@ const router = createBrowserRouter([
         path: "/",
       },
       {
-        element: <PersonalPage />,
-        path: "/personal/:id",
-      },
-      {
-        element: <GroupPage />,
-        path: "/group/:id",
+        element: <ThreadPage />,
+        path: paths.thread.details(":id"),
       },
     ],
   },

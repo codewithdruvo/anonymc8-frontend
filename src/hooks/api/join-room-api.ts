@@ -16,7 +16,7 @@ const useJoinRoomAPI = () => {
       if (!clientId) return;
 
       const response = await fetchData(
-        `${import.meta.env.VITE_APP_BACKEND_URL}/chat/join-room`,
+        `${import.meta.env.VITE_APP_BACKEND_API_URL}/chat/join-room`,
         {
           method: "POST",
           body: JSON.stringify({ roomId: id, clientId }),

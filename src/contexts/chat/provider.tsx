@@ -33,7 +33,7 @@ export const ChatContextProvider = (props: Props) => {
   useEffect(() => {
     if (!socket.current) {
       socket.current = io(
-        import.meta.env.VITE_APP_BACKEND_URL + "/socket/chat"
+        import.meta.env.VITE_APP_BACKEND_SOCKET_URL + "/socket/chat"
       );
 
       socket.current.on("connect", () => {

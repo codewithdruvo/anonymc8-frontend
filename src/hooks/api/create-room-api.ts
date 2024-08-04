@@ -14,7 +14,7 @@ const useCreateRoomAPI = () => {
     if (!clientId) return;
 
     const response = await fetchData(
-      `${import.meta.env.VITE_APP_BACKEND_URL}/chat/create-room`,
+      `${import.meta.env.VITE_APP_BACKEND_API_URL}/chat/create-room`,
       {
         method: "POST",
         body: JSON.stringify({ clientId }),

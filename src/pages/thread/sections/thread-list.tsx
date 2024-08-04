@@ -2,6 +2,7 @@ import AutoScrollBox from "@/components/common/auto-scroll-box";
 import { Badge } from "@/components/ui/badge";
 import { useChatContext } from "@/contexts/chat";
 import { IMessage } from "@/types/chat";
+import { LucideMessageSquareDashed } from "lucide-react";
 import ThreadMessage from "./thread-message";
 
 // ----------------------------------------------------------------------
@@ -32,33 +33,42 @@ const showAuthor = (current: IMessage, prev?: IMessage) => {
 const ThreadList = (_props: Props) => {
   const { messages } = useChatContext();
 
-  return (
-    <>
-      <AutoScrollBox
-        className="flex flex-1 h-full flex-col px-5"
-        dependencies={[messages]}
-        targetClassName="pb-10"
-      >
-        {messages.map((message, i, arr) => {
-          if (message.author === "NOTICE") {
+  if (messages.length > 0) {
+    return (
+      <>
+        <AutoScrollBox
+          className="flex flex-1 h-full flex-col px-5"
+          dependencies={[messages]}
+          targetClassName="pb-10"
+        >
+          {messages.map((message, i, arr) => {
+            if (message.author === "NOTICE") {
+              return (
+                <MessageNotice
+                  message={message}
+                  key={`${message.createdAt}-${i}`}
+                />
+              );
+            }
+
             return (
-              <MessageNotice
-                message={message}
+              <ThreadMessage
                 key={`${message.createdAt}-${i}`}
+                message={message}
+                showAuthor={showAuthor(message, arr[i - 1])}
               />
             );
-          }
+          })}
+        </AutoScrollBox>
+      </>
+    );
+  }
 
-          return (
-            <ThreadMessage
-              key={`${message.createdAt}-${i}`}
-              message={message}
-              showAuthor={showAuthor(message, arr[i - 1])}
-            />
-          );
-        })}
-      </AutoScrollBox>
-    </>
+  return (
+    <div className="flex flex-1 h-full flex-col px-5 items-center justify-center">
+      <LucideMessageSquareDashed className="opacity-40 mb-4" size={50} />
+      <p className="opacity-40">Be first to start the conversation</p>
+    </div>
   );
 };
 

@@ -19,7 +19,7 @@ const ThreadForm = (_props: Props) => {
   }, [sendMessage, text]);
 
   return (
-    <div className="flex items-stretch gap-3 pb-10">
+    <div className="flex items-stretch gap-3 pb-10 px-5">
       <AutosizeTextarea
         placeholder="Write a message"
         value={text}

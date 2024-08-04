@@ -18,7 +18,7 @@ const ThreadHeader = (_props: Props) => {
   };
 
   return (
-    <div className="flex items-center justify-between py-5 gap-3">
+    <div className="flex items-center justify-between py-5 gap-3 px-5">
       <Button size={"icon"} variant={"outline"} onClick={() => navigate(-1)}>
         <LucideArrowLeft />
       </Button>

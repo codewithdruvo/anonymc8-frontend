@@ -17,8 +17,6 @@ const ThreadPage = (_props: Props) => {
   const { clientId } = useChatContext();
   const { error, loading, execute, data } = useJoinRoomAPI();
 
-  console.log({ error });
-
   // join thread
   useEffect(() => {
     if (id && clientId) {
@@ -47,7 +45,7 @@ const ThreadPage = (_props: Props) => {
   if (!loading && data) {
     return (
       <div className="w-full bg-muted/20">
-        <div className="flex flex-col shadow-lg max-w-screen-md mx-auto h-screen bg-background border px-5">
+        <div className="flex flex-col shadow-lg max-w-screen-md mx-auto h-screen bg-background border">
           <ThreadHeader />
 
           <ThreadList />

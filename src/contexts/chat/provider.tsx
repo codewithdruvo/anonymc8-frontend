@@ -23,7 +23,7 @@ export const ChatContextProvider = (props: Props) => {
   const { children } = props;
 
   const socket = useRef<Socket | null>(null);
-  console.count("chat"); // debugging if there is multiple render
+  // console.count("chat"); // debugging if there is multiple render
 
   const [clientId, setClientId] = useState<IChatContext["clientId"]>(null);
   const [roomId, setRoomId] = useState<IChatContext["roomId"]>(null);

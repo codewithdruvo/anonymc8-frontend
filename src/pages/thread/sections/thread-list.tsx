@@ -1,7 +1,7 @@
+import AutoScrollBox from "@/components/common/auto-scroll-box";
 import { Badge } from "@/components/ui/badge";
 import { useChatContext } from "@/contexts/chat";
 import { IMessage } from "@/types/chat";
-import { useEffect, useRef } from "react";
 import ThreadMessage from "./thread-message";
 
 // ----------------------------------------------------------------------
@@ -31,16 +31,14 @@ const showAuthor = (current: IMessage, prev?: IMessage) => {
 
 const ThreadList = (_props: Props) => {
   const { messages } = useChatContext();
-  const lastDivRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (lastDivRef.current)
-      lastDivRef.current.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
 
   return (
     <>
-      <div className="flex flex-1 h-full flex-col px-1 overflow-y-auto">
+      <AutoScrollBox
+        className="flex flex-1 h-full flex-col px-5"
+        dependencies={[messages]}
+        targetClassName="pb-10"
+      >
         {messages.map((message, i, arr) => {
           if (message.author === "NOTICE") {
             return (
@@ -59,9 +57,7 @@ const ThreadList = (_props: Props) => {
             />
           );
         })}
-      </div>
-
-      <div ref={lastDivRef} className="pb-10" />
+      </AutoScrollBox>
     </>
   );
 };

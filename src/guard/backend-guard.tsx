@@ -24,7 +24,7 @@ const BackendGuard = (props: Props) => {
         <InfoCard
           title={"Connection Failed"}
           text={`Please try again later. currently we're not able to connect with backend server..`}
-          icon={<LucideAlertTriangle className="animate-spin text-primary" />}
+          icon={<LucideAlertTriangle className="text-primary" />}
         />
       </div>
     );

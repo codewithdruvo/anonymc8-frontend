@@ -13,7 +13,7 @@ const HomePage = (_props: Props) => {
           quibusdam architecto dolores magni blanditiis aliquid veritatis quod
           quas deserunt consequuntur.
         </p>
-        <div className="flex items-start sm:items-center gap-2 max-w-md flex-col sm:flex-row">
+        <div className="flex items-start sm:items-center gap-2 flex-col sm:flex-row">
           <CreateButton />
           <JoinButton />
         </div>

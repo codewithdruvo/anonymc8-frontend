@@ -11,8 +11,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import paths from "@/routes/path";
-import { LucideArrowRight } from "lucide-react";
-import { useState } from "react";
+import { LucideArrowRight, LucideLink2 } from "lucide-react";
+import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const JoinButton = () => {
@@ -20,7 +20,8 @@ const JoinButton = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = async () => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     navigate(paths.thread(id));
     setId("");
     setOpen(false);
@@ -41,22 +42,26 @@ const JoinButton = () => {
             Enter the room id to join the room
           </DialogDescription>
         </DialogHeader>
-        <div className="py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="id" className="text-right">
-              ID
-            </Label>
-            <Input
-              id="id"
-              className="col-span-3"
-              value={id}
-              onChange={(e) => setId(e.target.value.trim())}
-            />
+        <form onSubmit={handleSubmit}>
+          <div className="py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="id" className="text-right">
+                ID
+              </Label>
+              <Input
+                id="id"
+                className="col-span-3"
+                value={id}
+                onChange={(e) => setId(e.target.value.trim())}
+              />
+            </div>
           </div>
-        </div>
-        <DialogFooter>
-          <Button onClick={handleSubmit}>Save changes</Button>
-        </DialogFooter>
+          <DialogFooter>
+            <Button className="gap-2" type="submit">
+              Connect <LucideLink2 size={16} />
+            </Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );

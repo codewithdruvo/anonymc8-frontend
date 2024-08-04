@@ -12,9 +12,9 @@ export interface UseFetchResult<T> {
   fetchData: (url: string, options?: RequestInit) => Promise<FetchResult<T>>;
 }
 
-const useFetch = <T>(): UseFetchResult<T> => {
+const useFetch = <T>(defaultLoading = false): UseFetchResult<T> => {
   const [data, setData] = useState<T | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(defaultLoading);
   const [error, setError] = useState<Error | null>(null);
 
   const fetchData: UseFetchResult<T>["fetchData"] = useCallback(

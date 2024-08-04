@@ -1,3 +1,4 @@
+import { InfoCard } from "@/components/cards/info";
 import { Button } from "@/components/ui/button";
 import { useChatContext } from "@/contexts/chat";
 import useJoinRoomAPI from "@/hooks/api/join-room-api";
@@ -29,12 +30,16 @@ const ThreadPage = (_props: Props) => {
   if (!loading && error) {
     return (
       <div className="w-full h-screen flex flex-col items-center justify-center">
-        <LucideAlertTriangle className="mb-3" size={45} />
-        <h2 className="text-lg text-center mb-10">{error?.message}</h2>
-
-        <Link to={paths.root}>
-          <Button>Back to home</Button>
-        </Link>
+        <InfoCard
+          title={error?.message || "Something went to wrong"}
+          text={`The room you're looking for, maybe it's not available now. Please try again later or try with different room`}
+          icon={<LucideAlertTriangle className="text-primary" />}
+          actions={
+            <Link to={paths.root}>
+              <Button>Back to home</Button>
+            </Link>
+          }
+        />
       </div>
     );
   }
